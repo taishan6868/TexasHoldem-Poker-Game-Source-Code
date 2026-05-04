@@ -1,0 +1,252 @@
+module DZProto
+{
+    const int iProtoVersion = 1021; //协议版本
+    
+    //消息号枚举，CS发送和接受为同一消息号
+    enum E_msg_ID 
+    {
+        MSG_ID_BEGIN,
+        NN_msg2cTestBegin_E     = 10,
+        NN_msg2sGameBegin_E     = 15,
+        NN_msg2sFrontBet_E      = 20,
+        NN_msg2sUpdatePool_E    = 25,
+        NN_msg2sGameBanker_E    = 30,
+        NN_msg2sSendHdCard_E    = 35,
+        NN_msg2sTokenNotify_E   = 40,
+        NN_msg2csTokenBet_E     = 45,
+        NN_msg2sSendComCard_E   = 50,
+        NN_msg2sSendTurnCard_E  = 55,
+        NN_msg2sSendRiverCard_E = 60,
+        NN_msg2csShowHdCard_E   = 65,
+        NN_msg2sGameEnd_E       = 70,
+        NN_msg2sTimerBegin_E    = 75,
+        NN_msg2sTimerEnd_E      = 80,
+        NN_msg2csGameStation_E  = 85,
+        NN_msg2csGuessHdCard_E  = 90,
+        NN_msg2csTestCard_E     = 95,
+        NN_msg2csGetRecord_E    = 100,
+        NN_msg2sAutoBet_E       = 105,
+        NN_msg2csGetBuy_E       = 110,
+        NN_msg2cBuyChip_E       = 115,
+        NN_msg2sMessageTip_E    = 120,
+        MSG_ID_END,
+    };
+
+    struct NN_sCard
+    {
+        0 require int iCardType;
+        1 require vector<int> vCard;
+    };
+
+    struct NN_msg2sGameBegin
+    {
+        0 require map<int, long> mDZWealth;
+    };
+
+    struct NN_msg2sFrontBet
+    {
+        0 require long lBetNum;
+        1 require map<int, long> mDZWealth;
+    };
+
+    struct NN_msg2sTokenNotify
+    {
+        0 require int iCid;
+        1 require int iDZAct;
+        2 require long lBetNum;
+        3 require long lLastPool;
+    };
+
+    struct NN_msg2cTokenBet
+    {
+        0 require int iDZAct;
+        1 require long lBetNum;
+    };
+
+    struct NN_msg2sTokenBet
+    {
+        0 require int iCid;
+        1 require int iDZAct;
+        2 require long lBetNum;
+        3 require long lPoolNum;
+        4 require long lDZWealth;
+    };
+
+    struct NN_msg2sUpdatePool
+    {
+        0 require vector<int> vBetCid;
+        1 require vector<long> vPoolNum;
+        2 require bool isFront;
+    };
+
+    struct NN_msg2sGameBanker
+    {
+        0 require int iBankerCid;
+        1 require map<int, long> mBlindNum;
+        2 require map<int, long> mDZWealth;
+        3 require long lPoolNum;
+    };
+
+    struct NN_msg2sSendHdCard
+    {
+        0 require map<int, vector<int>> mHdCard;
+        1 require int maxtype;
+        2 require double maxrate;
+    };
+        
+    struct NN_msg2sSendComCard
+    {
+        0 require vector<int> vComCard;
+        1 require NN_sCard sCard;
+        2 require int maxtype;
+        3 require double maxrate;
+    };
+
+    struct NN_msg2sSendTurnCard
+    {
+        0 require int iTurnCard;
+        1 require NN_sCard sCard;
+        2 require int maxtype;
+        3 require double maxrate;
+    };
+
+    struct NN_msg2sSendRiverCard
+    {
+        0 require int iRiverCard;
+        1 require NN_sCard sCard;
+        2 option int maxtype;
+        3 option double maxrate;
+    };
+
+    struct NN_msg2sGameEnd  
+    {
+        0 require map<int, NN_sCard> mCard;
+        1 require vector<vector<int>> mWinPool;
+        2 require map<int, vector<int>> mHdCard;
+        3 require map<int, long> mDZChange;
+        4 require map<int, long> mDZWealth;
+    };
+
+    struct NN_msg2cShowHdCard   
+    {
+        0 require bool bShow;
+    };
+    
+    struct NN_msg2sShowHdCard   
+    {
+        0 require map<int, vector<int>> mHdCard;
+    };
+
+    struct NN_sConfig   
+    {
+        0 require int iFrontBet;
+        1 require int iBlindNum;
+        2 require int iMinTake;
+        3 require map<int, int> mGuessType;
+        4 require vector<int>  vGuessNum;
+        5 require vector<int>  vUserID;
+    };
+
+    struct NN_msg2sGameStation  
+    {
+        0 require NN_sConfig sConfig;
+        1 require int iState;
+        2 require int iBankerCid;
+        3 require int iTokenCid;
+        4 require bool bDone;
+        5 require long lPoolNum;
+        6 require NN_msg2cTokenBet sTokenBet;
+        7 require NN_sCard sCard;
+        8 require  vector<int> vComCard;
+        9 require map<int, int> mOption;
+        10 require map<int, vector<int>> mHdCard;
+        11 require vector<long> vPoolNum;
+        12 require map<int, long> mBetNum;
+        13 require map<int, long> mDZWealth;
+    };
+
+    struct NN_msg2sTimerBegin
+    {
+        0 require int iTime;
+        1 require int iXtkey;
+    };
+
+    struct NN_msg2csGuessHdCard
+    {
+        0 require int iGuessType;
+        1 require long lGuessNum;
+    };
+
+    struct NN_msg2cTestCard
+    {
+        0 require vector<int> vHdCard;
+        1 require vector<int> vComCard;
+    };
+
+    struct NN_msg2sTestCard
+    {
+        0 require NN_msg2cTestCard sTestCard;
+        1 require NN_sCard sCard;
+    };
+
+    struct NN_sAct
+    {
+        0 require int iDZAct;
+        1 require long lBetNum;
+    };
+
+    struct NN_sUser
+    {
+        0 require string url;
+        1 require string name;
+        2 require long uid;
+        3 require int cid;
+        4 require long change;
+        5 require int iCardType;
+        6 require vector<int> vHdCard;
+        7 require vector<int> vComCard;
+        8 require map<int, NN_sAct> mAct;
+    };
+
+    struct NN_sRecord
+    {
+        0 require int iBankerCid;
+        1 require int iBigBlindCid;
+        2 require int iSmallBlindCid;
+        3 require bool bComplete;
+        4 require vector<NN_sUser> vUser;
+    };
+
+    struct NN_msg2sGetRecord    
+    {
+        0 require vector<NN_sRecord> vRecord;
+    };
+
+    struct NN_msg2sAutoBet  
+    {
+        0 require long lBetNum;
+    };
+
+    struct NN_msg2cBuyChip  
+    {
+        0 require long lBuyNum;
+        1 require bool bAutoMax;
+    };
+
+    struct NN_msg2sGetBuy   
+    {
+        0 require long lWealth;
+        1 require NN_msg2cBuyChip sBuyChip;
+    };  
+
+    struct NN_msg2sMessageTip   
+    {
+        0 require int iTip;
+    };     
+
+    struct NN_msg2csDefault 
+    {
+        0 require int iRet;
+    };
+};
+
