@@ -1,60 +1,39 @@
 
-#-----------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 APP           := XGame
-TARGET        := AIServer
-STRIP_FLAG    := N
-TARS2CPP_FLAG :=
+SERVER_NAME   := Comm
+TARGET_NAME   := $(SERVER_NAME)
+TARGET        := lib$(SERVER_NAME).a
+TARSFILE_DIR  := /home/tarsproto/$(APP)/$(SERVER_NAME)
 CFLAGS        += -lm
 CXXFLAGS      += -lm
+
+CONFIG      :=
+#EXTRA_LIB 	:= libpcre.a
+
+RELEASE_ICE += *.h
 
 INCLUDE   += -I/usr/local/cpp_modules/wbl/include
 LIB       += -L/usr/local/cpp_modules/wbl/lib -lwbl
 
-INCLUDE   += -I/usr/local/cpp_modules/protobuf/include
-LIB       += -L/usr/local/cpp_modules/protobuf/lib -lprotobuf
+INCLUDE   += -I/usr/local/cpp_modules/pcre/include
+LIB       += -L/usr/local/cpp_modules/pcre/lib -lpcre
 
-INCLUDE   += -I/usr/local/mysql/include
-LIB       += -L/usr/local/mysql/lib/mysql -lmysqlclient
+#-------------------------------------------------------------------------------
 
-INCLUDE   += -IGameLogic/22013900
-LOCAL_SRC += GameLogic/22013900/NNQSLogic.cpp GameLogic/22013900/NNQSGameData.cpp \
-			 GameLogic/22013900/NNQSLogicConfig.cpp
+publish:
+	rm -rvf $(TARSFILE_DIR)
+	mkdir -vp $(TARSFILE_DIR)
+	@make cleanall
+	@make all 
+	cp -rf *.h $(TARSFILE_DIR)
+	cp -rf *.hpp $(TARSFILE_DIR)
+	cp -rf *.tars $(TARSFILE_DIR)
+	cp -rf ${TARGET} $(TARSFILE_DIR)
+	echo "INCLUDE += -I$(TARSFILE_DIR)"  >  $(TARSFILE_DIR)/$(TARGET_NAME).mk;
+	echo "REMOTE_OBJ += $(TARSFILE_DIR)/$(TARGET) "  >> $(TARSFILE_DIR)/$(TARGET_NAME).mk;
 
-INCLUDE   += -Itimer
-LOCAL_SRC += timer/Timer.cpp timer/BatchRobotTimer.cpp
-
-INCLUDE   += -Idb
-LOCAL_SRC += db/DBOperator.cpp
-
-INCLUDE   += -IAsyncOperate/RoomSvr
-LOCAL_SRC += AsyncOperate/RoomSvr/AsyncPushRobotCallback.cpp AsyncOperate/RoomSvr/AsyncAICalcResultCallback.cpp
-
-INCLUDE   += -IAsyncOperate/HallSvr
-LOCAL_SRC += AsyncOperate/HallSvr/AsyncUserInfoCallback.cpp
-
-INCLUDE   += -IMonteCarlo
-LOCAL_SRC += MonteCarlo/cards.cpp MonteCarlo/samples.cpp MonteCarlo/simulator.cpp \
- 			 MonteCarlo/tables.cpp MonteCarlo/tools.cpp
-
-
-INCLUDE   += -IThirdParty
-LOCAL_SRC += ThirdParty/ThirdPartyManager.cpp ThirdParty/AsyncEpoller.cpp \
-			 ThirdParty/AsyncSocket.cpp ThirdParty/ThirdLog.cpp \
-			 ThirdParty/NetMsg.cpp ThirdParty/RawBuffer.cpp ThirdParty/TcpClient.cpp
-
-#-----------------------------------------------------------------------
-include /home/tarsproto/XGame/Comm/Comm.mk
-include /home/tarsproto/XGame/ConfigServer/ConfigServer.mk
-include /home/tarsproto/XGame/RoomServer/RoomServer.mk
-include /home/tarsproto/XGame/HallServer/HallServer.mk
-include /home/tarsproto/XGame/PushServer/PushServer.mk
-include /home/tarsproto/XGame/AIServer/AIServer.mk
-include /home/tarsproto/XGame/protocols/protocols.mk
 include /usr/local/tars/cpp/makefile/makefile.tars
 
-#-----------------------------------------------------------------------
-
-xgame:
-	cp -f $(TARGET) /usr/local/app/tars/tarsnode/data/XGame.AIServer/bin/
-	cp -f ./config/*conf /usr/local/app/tars/tarsnode/data/XGame.AIServer/bin/
+#-------------------------------------------------------------------------------

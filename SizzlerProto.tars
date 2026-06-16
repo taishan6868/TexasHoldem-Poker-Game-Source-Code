@@ -1,0 +1,32 @@
+/**
+ *时时乐服务协议文件 
+ **/
+module sizzler
+{
+	struct RoomMsgReq
+	{
+		0 require long lUin;  //用户id
+		1 require int iMsgId; //消息id
+		2 require vector<byte> vecMsgData; //消息数据	
+	};
+
+	//消息枚举
+	enum  E_MSG_TYPE 
+	{
+		E_USER_BET_GAME_NOTIFY = 1, //用户下注通知
+		E_USER_NOT_BET_SIZZLER_NOTIFY = 2, //时时乐不可用
+	};
+
+	//用户下注消息数据
+	struct TUserBet
+	{
+		0 require long lChangeGold;   //下注金额
+		1 require long lAfterGold;	  //下注后金额
+	};
+
+	//用户下注消息数据
+	struct TNotBet
+	{
+		0 require int iNotBet;   //0.可以下注，1.不可以下注
+	};
+}; 

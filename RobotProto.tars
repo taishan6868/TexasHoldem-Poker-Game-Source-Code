@@ -1,0 +1,30 @@
+module robot
+{
+	//机器人信息
+	struct TRobotInfo
+	{
+		0 require long lPlayerID;
+		1 require string sPlayerIP;
+	};
+
+	struct TRobot
+	{
+		0 require long lPlayerID;		
+	};
+
+	//推送机器人请求
+	struct TPushRobotReq
+	{
+		0 require string sRoomID;
+		1 require int iBatchID; //批次
+		2 require string sServrantAddr;
+		3 require vector<TRobotInfo> vecRobot;  //机器人列表
+	};
+	
+	//推送机器人应答
+	struct TPushRobotRsp
+	{
+		0 require int iResult;  //错误码，0--成功
+		1 require map<int, vector<TRobot>> mapRobotBatch; //Room中存在机器人
+	};
+};
